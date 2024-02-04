@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest' ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: cd hello && make
+
+      - name: Install Module
+        run: sudo insmod hello.ko
+
+      - name: Remove Module
+        run: sudo rmmod hello.ko
+
+      - name: Show Logs
+        run: sudo dmesg
